@@ -19,6 +19,10 @@ defmodule PoemvalidatorTest do
 
     first_few = digits |> String.slice 0..6
     assert first_few != "3.11111"
+  end
+
+  test "syntax comparison" do
+    digits = read_all("../pi-500.txt")
 
     # compare these syntaxes ways
     first_few = digits |> String.slice 0..6
@@ -34,4 +38,28 @@ defmodule PoemvalidatorTest do
     assert first_few == "3.14159"
 
   end
+
+  test "punctuation strings" do
+    assert (String.upcase ",") == (String.downcase ",")
+
+    assert     is_punctuation "!"
+    assert not is_punctuation "d"
+  end
+
+  def is_punctuation(sample) do
+    (String.upcase sample) == (String.downcase sample)
+  end
+
+  def encodes_zero(sample) do
+    (String.upcase sample) == (String.downcase sample) and sample != "."
+  end
+
+  test "encoding of zeroes" do
+    assert (String.upcase ",") == (String.downcase ",")
+
+    assert     encodes_zero "!"
+    assert not encodes_zero "d"
+    assert not encodes_zero "."
+  end
+
 end
