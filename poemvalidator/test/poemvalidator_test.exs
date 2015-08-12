@@ -8,8 +8,13 @@ defmodule PoemvalidatorTest do
     digits
   end
 
+  test "poem is being read from file" do
+    assert "For a time" == read_all("../poem.txt") |> String.slice 0..9
+  end
+
   test "pi is being read from file" do
     digits = read_all("../pi-500.txt")
+
     assert String.starts_with? digits, "3.1415" 
 
     first_few = digits |> String.slice 0..6

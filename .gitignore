@@ -30,8 +30,8 @@ bin
 
 # Elixir things
 
-/_build
-/deps
+# /_build
+# /deps
 erl_crash.dump
 *.ez
 
