@@ -1,0 +1,59 @@
+[attr]code      eol=lf whitespace=tab-in-indent,trailing-space,tabwidth=4
+[attr]wincode   code eol=crlf
+
+.gitattributes code
+.gitignore     code
+.gitmodules    code
+
+*.md        code
+*.jl        code
+*.rs        code
+*.hs        code
+*.bash      code
+*.sh        code
+*.py        code
+*.rb        code
+*.pl        code
+*.js        code
+*.html      code
+*.htm       code
+*.css       code
+*.in        code
+*.wsgi      code
+
+*.fs        wincode
+*.cs        wincode
+*.csproj    wincode
+*.fsproj    wincode
+*.bat       wincode
+*.cmd       wincode
+
+*.ex        code
+*.exs       code
+
+*.sql       text
+*.xml       text
+*.ini       text
+*.png       -text
+*.jpg       -text
+*.gif       -text
+*.pdf       -text
+*.exe       -text
+*.dll       -text
+*.zip       -text
+*.gz        -text
+*.7z        -text
+
+# CRYPTO
+
+*.pretty    text
+*.sig       text
+*.key       text
+*.msg       eol=lf
+*.b64       text
+*.pem       text
+*.csr       text
+*.der       -text
+*.crt       -text
+
+
