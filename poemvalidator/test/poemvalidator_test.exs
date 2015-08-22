@@ -89,7 +89,7 @@ defmodule PoemvalidatorTest do
     
     case sample do
       sample when is_digit -> sample
-      sample            -> sample |> String.length |> Integer.to_string
+      sample               -> sample |> String.length |> Integer.to_string
     end
   end
 
@@ -99,8 +99,33 @@ defmodule PoemvalidatorTest do
     assert "7"  == digits_from_simple_word "7"
   end
 
-  def tokenize_string(content) do
-    
+  def tokenize_words(content) do
+    # split on non-zero punctuation
+    content |> String.split [" ", "\n", "\r", "."], trim: true
+  end
+
+  test "tokens" do
+    assert ["one", "two"] == tokenize_words "one two"
+    assert ["one", "two"] == tokenize_words "one.two"
+    assert ["one", "two"] == tokenize_words "one. \r\ntwo"
+  end
+
+
+  def insert_zeroes(word_or_words) do
+    words = word_or_words |> String.split ~r/[^a-zA-Z]/
+
+    # split into a list of words separated by zeroes
+    List.foldr words, [], fn
+      x, []   -> [x]
+      "", acc -> ["0"] ++ acc
+      x, acc  -> [x, "0"] ++ acc
+      _, acc  -> acc
+    end
+  end
+
+  test "tokens incl. zeroes" do
+    assert ["one", "0", "two"] == insert_zeroes "one'two"
+    assert ["one", "0", "0", "two"] == insert_zeroes "one'!two"
   end
 end
 
