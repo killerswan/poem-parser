@@ -47,11 +47,14 @@ defmodule PoemvalidatorTest do
   end
 
   def is_punctuation(sample) do
-    (String.upcase sample) == (String.downcase sample)
+    ((String.upcase sample) == (String.downcase sample)) and not String.match?(sample, ~r/[0-9]/)
   end
 
   def encodes_zero(sample) do
-    (String.upcase sample) == (String.downcase sample) and sample != "."
+    '''
+    "Any punctuation mark other than a period represents a zero digit (a period stands fno digit)."
+    ''' 
+    is_punctuation(sample) and sample != "."
   end
 
   test "encoding of zeroes" do
@@ -62,4 +65,48 @@ defmodule PoemvalidatorTest do
     assert not encodes_zero "."
   end
 
+  def is_word_digit(sample) do
+    '''
+    "A digit written literally stands for the same digit in the expansion."
+    '''
+    String.match?(sample, ~r/^[0-9]$/)
+  end
+
+  test "a word can be a digit" do
+    assert     is_word_digit "8"
+    assert not is_word_digit "eight"
+    assert not is_word_digit ""
+    assert not is_word_digit "88"
+  end
+
+  def digits_from_simple_word(sample) do
+    '''
+    "merely count the number of letters in each word...to obtain the successive decimals to pi."
+    "Words of longer than 9 letters represent two adjacent digits (for example, a twelve-letter word represents the two digits 1- 2)."
+    '''
+
+    is_digit = is_word_digit(sample)
+    
+    case sample do
+      sample when is_digit -> sample
+      sample            -> sample |> String.length |> Integer.to_string
+    end
+  end
+
+  test "simple word translations" do
+    assert "1"  == digits_from_simple_word "a"
+    assert "10" == digits_from_simple_word "superfreak"
+    assert "7"  == digits_from_simple_word "7"
+  end
+
+  def tokenize_string(content) do
+    
+  end
 end
+
+
+
+
+
+
+
