@@ -119,8 +119,8 @@ defmodule PoemvalidatorTest do
     char_and_types = Enum.map chars, fn(char) -> {char, encodes_zero(char)} end
 
     {first_word, acc} = List.foldr char_and_types, {[], []}, fn
-        {char, true},  {[], acc_words}        -> {[],                  ["0"] ++ acc_words}
-        {char, true},  {next_word, acc_words} -> {[],                  ["0", Enum.join(next_word)] ++ acc_words}
+        {_, true},     {[], acc_words}        -> {[],                  ["0"] ++ acc_words}
+        {_, true},     {next_word, acc_words} -> {[],                  ["0", Enum.join(next_word)] ++ acc_words}
         {char, false}, {next_word, acc_words} -> {[char] ++ next_word, acc_words}
       end
 
