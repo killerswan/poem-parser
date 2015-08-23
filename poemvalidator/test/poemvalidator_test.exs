@@ -15,10 +15,10 @@ defmodule PoemvalidatorTest do
   test "pi is being read from file" do
     digits = read_all("../pi-500.txt")
 
-    assert String.starts_with? digits, "3.1415" 
+    assert String.starts_with? digits, "31415" 
 
     first_few = digits |> String.slice 0..6
-    assert first_few != "3.11111"
+    assert first_few != "311111"
   end
 
   test "syntax comparison" do
@@ -26,16 +26,16 @@ defmodule PoemvalidatorTest do
 
     # compare these syntaxes ways
     first_few = digits |> String.slice 0..6
-    assert first_few == "3.14159"
+    assert first_few == "314159"
 
     first_few = digits |> String.slice(0..6)
-    assert first_few == "3.14159"
+    assert first_few == "314159"
 
     first_few = String.slice digits, 0..6
-    assert first_few == "3.14159"
+    assert first_few == "314159"
 
     first_few = String.slice(digits, 0..6)
-    assert first_few == "3.14159"
+    assert first_few == "314159"
 
   end
 
