@@ -104,7 +104,7 @@ defmodule PoemvalidatorTest do
     content |> String.split [" ", "\n", "\r", "."], trim: true
   end
 
-  test "tokens" do
+  test "tokenized words" do
     assert ["one", "two"] == tokenize_words "one two"
     assert ["one", "two"] == tokenize_words "one.two"
     assert ["one", "two"] == tokenize_words "one. \r\ntwo"
@@ -116,16 +116,21 @@ defmodule PoemvalidatorTest do
 
     # split into a list of words separated by zeroes
     List.foldr words, [], fn
-      x, []   -> [x]
+      x,  []  -> [x]
       "", acc -> ["0"] ++ acc
-      x, acc  -> [x, "0"] ++ acc
-      _, acc  -> acc
+      x,  acc -> [x, "0"] ++ acc
     end
   end
 
   test "tokens incl. zeroes" do
+    assert ["one"] == insert_zeroes "one"
     assert ["one", "0", "two"] == insert_zeroes "one'two"
     assert ["one", "0", "0", "two"] == insert_zeroes "one'!two"
+
+    tokens = tokenize_words "one-two.three"
+    assert ["one-two", "three"] == tokens
+    assert [["one", "0", "two"], ["three"]] == Enum.map tokens, fn(x) -> insert_zeroes(x) end
+    assert ["one", "0", "two", "three"] == Enum.flat_map tokens, fn(x) -> insert_zeroes(x) end
   end
 end
 
