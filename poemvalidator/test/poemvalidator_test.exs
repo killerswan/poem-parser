@@ -111,19 +111,29 @@ defmodule PoemvalidatorTest do
   end
 
 
-  def insert_zeroes(word_or_words) do
-    words = word_or_words |> String.split ~r/[^a-zA-Z]/
+  def insert_zeroes(phrase) do
+    '''
+    split into a list of words separated by zeroes
+    '''
+    chars = String.graphemes phrase
+    char_and_types = Enum.map chars, fn(char) -> {char, encodes_zero(char)} end
 
-    # split into a list of words separated by zeroes
-    List.foldr words, [], fn
-      x,  []  -> [x]
-      "", acc -> ["0"] ++ acc
-      x,  acc -> [x, "0"] ++ acc
+    {first_word, acc} = List.foldr char_and_types, {[], []}, fn
+        {char, true},  {[], acc_words}        -> {[],                  ["0"] ++ acc_words}
+        {char, true},  {next_word, acc_words} -> {[],                  ["0", Enum.join(next_word)] ++ acc_words}
+        {char, false}, {next_word, acc_words} -> {[char] ++ next_word, acc_words}
+      end
+
+    case {first_word, acc} do
+      {[], acc} -> acc
+      {first_word, acc} -> [Enum.join(first_word)] ++ acc
     end
   end
 
   test "tokens incl. zeroes" do
     assert ["one"] == insert_zeroes "one"
+    assert ["0", "one"] == insert_zeroes "%one"
+    assert ["one", "0"] == insert_zeroes "one-"
     assert ["one", "0", "two"] == insert_zeroes "one'two"
     assert ["one", "0", "0", "two"] == insert_zeroes "one'!two"
 
@@ -132,6 +142,27 @@ defmodule PoemvalidatorTest do
     assert [["one", "0", "two"], ["three"]] == Enum.map tokens, fn(x) -> insert_zeroes(x) end
     assert ["one", "0", "two", "three"] == Enum.flat_map tokens, fn(x) -> insert_zeroes(x) end
   end
+
+  def parse_poem_as_digits(poem) do
+    """
+    poem
+    |> fn(x) -> tokenize_words(x) end
+    |> Enum.flat_map fn(x) -> insert_zeroes(x) end
+    |> Enum.map fn(x) -> digits_from_simple_word(x) end
+    |> Enum.join
+    """
+    words = tokenize_words poem
+    words2 = Enum.flat_map words, fn(x) -> insert_zeroes(x) end
+    digits = Enum.map words2, fn(x) -> digits_from_simple_word(x) end
+    Enum.join digits
+  end
+
+  test "parsing poems" do
+    assert "1234" == parse_poem_as_digits "I am the best"
+    assert "01234" == parse_poem_as_digits "!I am the best"
+    assert "12340" == parse_poem_as_digits "I am the best!"
+  end
+  
 end
 
 
