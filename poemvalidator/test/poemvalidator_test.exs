@@ -116,6 +116,8 @@ defmodule PoemvalidatorTest do
     split into a list of words separated by zeroes
     '''
     chars = String.graphemes phrase
+
+    # FIXME: is there a way I could call encodes_zero in the pattern match?
     char_and_types = Enum.map chars, fn(char) -> {char, encodes_zero(char)} end
 
     # traverse the characters and insert zeroes or whole words in the result 
@@ -146,6 +148,8 @@ defmodule PoemvalidatorTest do
   end
 
   def parse_poem_as_digits(poem) do
+    # FIXME: how can I pipe these things?
+    # FIXME: how can I define these like the module ones so I don't need wrapper fns?
     """
     poem
     |> fn(x) -> tokenize_words(x) end
