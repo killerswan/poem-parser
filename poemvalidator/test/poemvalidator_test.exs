@@ -163,6 +163,21 @@ defmodule PoemvalidatorTest do
     assert "12340" == parse_poem_as_digits "I am the best!"
   end
   
+  test "check prefix of poem for pi-500" do
+    poem = read_all("../poem.txt") |> parse_poem_as_digits |> String.slice 0..7
+    len = String.length poem
+    digits = read_all("../pi-500.txt") |> String.slice 0..(len-1)
+
+    assert digits == poem
+  end
+
+  test "check whole poem for pi-500" do
+    poem = read_all("../poem.txt") |> parse_poem_as_digits
+    len = String.length poem
+    digits = read_all("../pi-500.txt") |> String.slice 0..(len-1)
+
+    assert digits == poem
+  end
 end
 
 
