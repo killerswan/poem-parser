@@ -129,7 +129,7 @@ defmodule PoemvalidatorTest do
 
     tokens = tokenize_words "one-two.three"
     assert ["one-two", "three"] == tokens
-    assert [["one", "0", "two"], ["three"]] == Enum.map tokens, fn(x) -> insert_zeroes(x) end
+    assert [["one", "0", "two"], ["three"]] == Enum.map tokens, insert_zeroes
     assert ["one", "0", "two", "three"] == Enum.flat_map tokens, fn(x) -> insert_zeroes(x) end
   end
 end
